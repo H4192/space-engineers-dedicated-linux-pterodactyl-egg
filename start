@@ -1,8 +1,6 @@
 #!/bin/bash
 if [[ $EUID -eq 0 ]]; then
     if id sededicated >/dev/null 2>&1; then
-        chown -R sededicated:sededicated *
-        chown sededicated:sededicated .
         runuser -l sededicated bash -c "cd $PWD;./start"
         exit 0
     else
@@ -10,7 +8,10 @@ if [[ $EUID -eq 0 ]]; then
         read -e SHOULDADDUSER
         if [ "$SHOULDADDUSER" == "y" ] || [ "$SHOULDADDUSER" == "Y" ]; then
             groupadd -g 867 sededicated
-            useradd -u 867 -g 867 sededicated
+            useradd -u 867 -g 867 sededicated -p badpass
+            passwd --delete sededicated
+            chown -R sededicated:sededicated *
+            chown sededicated:sededicated .
             ./start
             exit 0
         else
