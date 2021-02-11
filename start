@@ -14,7 +14,7 @@ if [ ! -f ./appdata/space-engineers/config/World/Sandbox.sbc ]; then
     unzip -n star-system.zip -d ./appdata/space-engineers/config
 fi
 
-chown -R :sededicated ./appdata
+sudo chown -R :sededicated ./appdata
 
 sudo docker-compose up -d 
 sudo docker-compose logs -f
