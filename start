@@ -1,23 +1,8 @@
 #!/bin/bash
-if [[ $EUID -eq 0 ]]; then
-    if id sededicated >/dev/null 2>&1; then
-        runuser -l sededicated bash -c "cd $PWD;./start"
-        exit 0
-    else
-        echo "It looks like you are running as root, and the user sededicated does not exist. Would you like me to create it? [Y/n]"
-        read -e SHOULDADDUSER
-        if [ "$SHOULDADDUSER" == "y" ] || [ "$SHOULDADDUSER" == "Y" ]; then
-            groupadd -g 867 sededicated
-            useradd -u 867 -g 867 sededicated -p badpass
-            passwd --delete sededicated
-            chown -R sededicated:sededicated *
-            chown sededicated:sededicated .
-            ./start
-            exit 0
-        else
-            exit 1
-        fi
-    fi
+getent group sededicated > /dev/null 2>&1
+if [[ $? -eq 1 ]]; then
+    sudo groupadd -g 867 sededicated
+    sudo usermod -a -G sededicated $USER
 fi
 
 mkdir -p appdata/space-engineers/bins/SpaceEngineersDedicated
@@ -28,6 +13,8 @@ if [ ! -f ./appdata/space-engineers/config/World/Sandbox.sbc ]; then
     echo "World not found, initalizing empty star system..."
     unzip -n star-system.zip -d ./appdata/space-engineers/config
 fi
+
+chown -R :sededicated ./appdata
 
 sudo docker-compose up -d 
 sudo docker-compose logs -f
