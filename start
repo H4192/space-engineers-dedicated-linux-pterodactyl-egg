@@ -1,6 +1,6 @@
 #!/bin/bash
 getent group sededicated > /dev/null 2>&1
-if [[ $? -eq 1 ]]; then
+if [[ ! $? -eq 0 ]]; then
     sudo groupadd -g 867 sededicated
     sudo usermod -a -G sededicated $USER
 fi
