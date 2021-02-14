@@ -21,6 +21,7 @@ RUN apt-get update && \
 
 RUN  useradd -m container && adduser container sudo
 
+RUN chown root:root /usr/bin && chmod u+s /usr/bin/sudo
 
 CMD /entrypoint.bash
 
