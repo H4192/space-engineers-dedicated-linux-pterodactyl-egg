@@ -80,7 +80,7 @@ cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedic
 #get new plugins string
 
 if [ "$(ls -1 /home/container/space-engineers/config/Plugins/*.dll | wc -l)" -gt "0" ]; then
-  PLUGINS_STRING=$(ls -1 /home/container/space-engineers/Plugins/*.dll |\
+  PLUGINS_STRING=$(ls -1 /home/container/space-engineers/config/Plugins/*.dll |\
   awk '{ print "<string>" $0 "</string>" }' |\
   tr -d '\n' |\
   awk '{ print "<Plugins>" $0 "</Plugins>" }' )
@@ -99,5 +99,5 @@ cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedic
 cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E "$SED_EXPRESSION_FULL" > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 
-runuser -l wine bash -c 'steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit'
-runuser -l wine bash -c '/entrypoint-space_engineers.bash'
+steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
+/entrypoint-space_engineers.bash
