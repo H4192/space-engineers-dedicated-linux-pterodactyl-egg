@@ -1,5 +1,6 @@
 #!/bin/bash
 
+su root
 
 ## errorcode start 110
 
