@@ -57,6 +57,12 @@ fi
 
 if [ $mounted = true ] && [ $files_missing = true ]; then
     echo "World not found, initalizing star system from package..."
+    mkdir -p /home/container/space-engineers/config
+    mkdir -p /home/container/space-engineers/SpaceEngineersDedicated
+    mkdir -p /home/container/space-engineers/bins/steamcmd
+    mkdir -p /home/container/space-engineers/config/World
+    mkdir -p /home/container/space-engineers/config/Plugins
+
     /usr/bin/unzip -n /ronly/star-system.zip -d /home/container/space-engineers/config
     mv /home/container/space-engineers/config/SpaceEngineers-Dedicated.cfg /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 fi
@@ -65,7 +71,7 @@ fi
 
 
 #set <LoadWorld> to the correct value
-cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E '/.*LoadWorld.*/c\  <LoadWorld>Z:\\home\\container\\space-engineers\\World</LoadWorld>' > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
+cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E '/.*LoadWorld.*/c\  <LoadWorld>Z:\\home\\container\\space-engineers\\config\\World</LoadWorld>' > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 #set game port to the correct value
 #cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E '/.*ServerPort.*/c\  <ServerPort>27016</ServerPort>' > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
@@ -73,7 +79,7 @@ cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedic
 #configure plugins section in SpaceEngineers-Dedicated.cfg
 #get new plugins string
 
-if [ "$(ls -1 /home/container/space-engineers/Plugins/*.dll | wc -l)" -gt "0" ]; then
+if [ "$(ls -1 /home/container/space-engineers/config/Plugins/*.dll | wc -l)" -gt "0" ]; then
   PLUGINS_STRING=$(ls -1 /home/container/space-engineers/Plugins/*.dll |\
   awk '{ print "<string>" $0 "</string>" }' |\
   tr -d '\n' |\
