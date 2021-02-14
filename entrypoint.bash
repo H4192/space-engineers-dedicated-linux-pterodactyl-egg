@@ -29,8 +29,8 @@ fi
 
 
 ## Check if files already exist
-world="/home/container/space-engineers/World" 
-sandbox="/home/container/space-engineers/World/Sandbox.sbc" 
+world="/home/container/space-engineers/config/World" 
+sandbox="/home/container/space-engineers/config/World/Sandbox.sbc" 
 config="/home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg"
 
 if [ ! -d $world ]; then
@@ -55,9 +55,10 @@ if [ $mounted = false ] && [ $files_missing = true ]; then
   exit 111
 fi
 
-if [ $mounted = true ] && [ $files_missing = false ]; then
+if [ $mounted = true ] && [ $files_missing = true ]; then
     echo "World not found, initalizing star system from package..."
-    /usr/bin/unzip -n /readonly/star-system.zip -d /home/container/space-engineers/SpaceEngineersDedicated
+    /usr/bin/unzip -n /readonly/star-system.zip -d /home/container/space-engineers/config
+    mv /home/container/space-engineers/config/SpaceEngineers-Dedicated.cfg /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 fi
 
 
