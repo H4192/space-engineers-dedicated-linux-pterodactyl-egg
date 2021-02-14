@@ -1,22 +1,68 @@
 #!/bin/bash
 
-# #check if /home/container/space-engineers/config/World is a folder
-if [ ! -d "/home/container/space-engineers/World" ]; then
-  echo "World folder does not exist, exiting"
-  exit 129
+
+## errorcode start 110
+
+unzip=false
+zipfound=false
+mounted=false
+ERRORMSG=""
+files_missing=false
+
+## Check if resources are mounted
+if [ -d "/ronly" ]; then 
+  echo "Mount directory found"
+  mounted=true
+else
+  echo "Mount directory unavailable"
+  ERRORMSG="${ERRORMSG}Mount directory unavailable \n"
 fi
 
-# #check if /home/container/space-engineers/config/World/Sandbox.sbc exists and is a file
-if [ ! -f "/home/container/space-engineers/World/Sandbox.sbc" ]; then
-  echo "Sandbox.sbc file does not exist, exiting."
-  exit 130
+## Check for star system package
+if [ $mounted = true && -f "/ronly/star-system.zip" ]; then
+    echo "Star system package found"
+    zipfound=true
+elif [ $mounted = true && ! -f "/ronly/star-system.zip" ]; then
+    echo "Star system package missing"
+    ERRORMSG="${ERRORMSG}Star system package missing \n"
 fi
 
-# #check if /home/container/space-engineers/config/SpaceEngineers-Dedicated.cfg is a file
-if [ ! -f "/home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg" ]; then
-  echo "SpaceEngineers-Dedicated.cfg file does not exist, exiting."
-  exit 131
+
+## Check if files already exist
+world="/home/container/space-engineers/World" 
+sandbox="/home/container/space-engineers/World/Sandbox.sbc" 
+config="/home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg"
+
+if [ ! -d $world ]; then
+  echo "World directory missing!"
+  ERRORMSG="${ERRORMSG}World directory missing!\n"
+  files_missing=true
 fi
+
+if [ ! -f $sandbox ]; then
+  echo "Sandbox.sbc file missing!"
+  ERRORMSG="${ERRORMSG}Sandbox.sbc file missing!\n"
+  files_missing=true
+fi
+
+if [ ! -f $sandbox ]; then
+  echo "SpaceEngineers-Dedicated.cfg file missing!"
+  ERRORMSG="${ERRORMSG}SpaceEngineers-Dedicated.cfg file missing!\n"
+  files_missing=true
+fi
+
+if [ $mounted = false && $files_missing = true ]; then
+  echo $ERRORMSG
+  exit 111
+fi
+
+if [ $mounted = true && $files_missing = false  ]; then
+    echo "World not found, initalizing star system from package..."
+    /usr/bin/unzip -n /readonly/star-system.zip -d /home/container/space-engineers/SpaceEngineersDedicated
+fi
+
+
+
 
 #set <LoadWorld> to the correct value
 cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E '/.*LoadWorld.*/c\  <LoadWorld>Z:\\home\\container\\space-engineers\\World</LoadWorld>' > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
