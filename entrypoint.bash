@@ -99,5 +99,5 @@ cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedic
 cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E "$SED_EXPRESSION_FULL" > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 
-steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
-/entrypoint-space_engineers.bash
+runuser -l wine bash -c 'steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit'
+runuser -l wine bash -c '/entrypoint-space_engineers.bash'
