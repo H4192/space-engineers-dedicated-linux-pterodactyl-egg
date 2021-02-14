@@ -17,7 +17,7 @@ RUN chmod +x /entrypoint.bash && chmod +x /entrypoint-space_engineers.bash
 RUN apt-get update && \
       apt-get -y install sudo
 
-RUN  useradd -m container && adduser docker sudo
+RUN  useradd -m container && adduser container sudo
 
 CMD /entrypoint.bash
 
