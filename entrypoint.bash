@@ -19,10 +19,10 @@ else
 fi
 
 ## Check for star system package
-if [ $mounted = true && -f "/ronly/star-system.zip" ]; then
+if [ $mounted = true ] && [ -f "/ronly/star-system.zip" ]; then
     echo "Star system package found"
     zipfound=true
-elif [ $mounted = true && ! -f "/ronly/star-system.zip" ]; then
+elif [ $mounted = true ] && [ ! -f "/ronly/star-system.zip" ]; then
     echo "Star system package missing"
     ERRORMSG="${ERRORMSG}Star system package missing \n"
 fi
@@ -51,12 +51,11 @@ if [ ! -f $sandbox ]; then
   files_missing=true
 fi
 
-if [ $mounted = false && $files_missing = true ]; then
-  echo $ERRORMSG
+if [ $mounted = false ] && [ $files_missing = true ]; then
   exit 111
 fi
 
-if [ $mounted = true && $files_missing = false  ]; then
+if [ $mounted = true ] && [ $files_missing = false ]; then
     echo "World not found, initalizing star system from package..."
     /usr/bin/unzip -n /readonly/star-system.zip -d /home/container/space-engineers/SpaceEngineersDedicated
 fi
