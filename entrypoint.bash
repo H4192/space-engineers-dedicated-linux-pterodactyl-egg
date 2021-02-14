@@ -57,7 +57,7 @@ fi
 
 if [ $mounted = true ] && [ $files_missing = true ]; then
     echo "World not found, initalizing star system from package..."
-    /usr/bin/unzip -n /readonly/star-system.zip -d /home/container/space-engineers/config
+    /usr/bin/unzip -n /ronly/star-system.zip -d /home/container/space-engineers/config
     mv /home/container/space-engineers/config/SpaceEngineers-Dedicated.cfg /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 fi
 
