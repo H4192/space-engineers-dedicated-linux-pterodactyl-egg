@@ -14,7 +14,10 @@ COPY entrypoint.bash /entrypoint.bash
 COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
 RUN chmod +x /entrypoint.bash && chmod +x /entrypoint-space_engineers.bash
 
-USER root
+RUN apt-get update && \
+      apt-get -y install sudo
+
+RUN  useradd -m container && adduser docker sudo
 
 CMD /entrypoint.bash
 
