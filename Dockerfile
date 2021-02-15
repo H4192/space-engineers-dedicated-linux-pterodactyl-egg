@@ -1,6 +1,6 @@
 FROM ubuntu:focal
 WORKDIR /home/container
-RUN mkdir /scripts
+RUN mkdir /home/container/scripts
 
 
 RUN \
@@ -18,18 +18,18 @@ RUN \
   apt purge software-properties-common gnupg2 python* -y &&\
   apt autoclean &&\
   apt autoremove -y &&\
-  curl -L https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks > /scripts/winetricks &&\
-  chmod +x /scripts/winetricks 
+  curl -L https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks > /home/container/scripts/winetricks &&\
+  chmod +x /home/container/scripts/winetricks
   ##adduser wine --disabled-password --gecos ""
 
-RUN  useradd -m container 
+RUN  useradd -m -u 1000 container 
 
-COPY install-winetricks /scripts/
+COPY install-winetricks /home/container/scripts
 RUN \
-  mkdir /wineprefix &&\
-  chown -R container:container /wineprefix &&\
-  chmod +x /scripts/install-winetricks
-WORKDIR /scripts
+  mkdir /home/container/wineprefix &&\
+  chown -R container:container /home/container/wineprefix &&\
+  chmod +x /home/container/scripts/install-winetricks
+WORKDIR /home/container/scripts
 RUN runuser container bash -c ./install-winetricks
 RUN \
   mkdir -p /home/container/space-engineers/bin &&\
