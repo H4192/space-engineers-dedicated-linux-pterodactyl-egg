@@ -1,49 +1,56 @@
-FROM ubuntu:focal
-WORKDIR /home/container
-RUN mkdir /home/container/scripts
+FROM debian:buster
 
-RUN  useradd -m -u 1000 container 
 
+
+RUN dpkg --add-architecture i386 &&\
+    apt-get update && apt-get upgrade -y &&\
+    apt-get install apt-utils curl gnupg2 software-properties-common libstb0 libavcodec58 libsdl2-2.0-0 libavutil56 libc6 -y
+
+RUN curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - &&\
+    apt-add-repository https://dl.winehq.org/wine-builds/debian/ &&\
+    apt-add-repository non-free &&\
+    apt-get update &&\
+    curl -L https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/i386/libfaudio0_20.01-0~buster_i386.deb > libfaudio0_20.01-0~buster_i386.deb &&\
+    curl -L https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/amd64/libfaudio0_20.01-0~buster_amd64.deb > libfaudio0_20.01-0~buster_amd64.deb &&\
+    dpkg -i --force-depends libfaudio0_20.01-0~buster_i386.deb &&\
+    dpkg -i --force-depends libfaudio0_20.01-0~buster_amd64.deb &&\
+    apt-get update &&\
+    apt-get install -f -y &&\
+    apt-get install --install-recommends winehq-stable -y &&\
+    rm *.deb &&\
+    echo steam steam/question select "I AGREE" | debconf-set-selections &&\
+    apt-get install steamcmd xvfb cabextract unzip -y &&\
+    apt-get purge software-properties-common gnupg2 python* -y &&\
+    apt-get autoclean &&\
+    apt-get autoremove -y
+
+RUN mkdir /scripts &&\
+    curl -L https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks > /scripts/winetricks &&\
+    chmod +x /scripts/winetricks 
+
+
+COPY install-winetricks /scripts/
+
+RUN adduser container --disabled-password --gecos "" 
 
 RUN \
-  dpkg --add-architecture i386 &&\
-  apt update && apt upgrade -y &&\
-  apt install curl gnupg2 software-properties-common -y &&\
-  curl https://dl.winehq.org/wine-builds/winehq.key | apt-key add - &&\
-  add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'  &&\
-  apt update &&\
-  apt install libfaudio0:amd64 libfaudio0:i386 -y &&\
-  apt install -f -y &&\
-  apt install --install-recommends winehq-stable -y &&\
-  echo steam steam/question select "I AGREE" | debconf-set-selections &&\
-  apt install steamcmd xvfb cabextract unzip -y &&\
-  apt purge software-properties-common gnupg2 python* -y &&\
-  apt autoclean &&\
-  apt autoremove -y &&\
-  curl -L https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks > /home/container/scripts/winetricks &&\
-  chmod +x /home/container/scripts/winetricks
-  ##adduser wine --disabled-password --gecos ""
+    mkdir /wineprefix &&\
+    chown -R container:container /wineprefix &&\
+    chmod +x /scripts/install-winetricks
 
-RUN apt-get install curl -y
+WORKDIR /scripts
 
-COPY install-winetricks /home/container/scripts
-RUN \
-  mkdir /home/container/wineprefix &&\
-  chown -R container:container /home/container/wineprefix &&\
-  chmod +x /home/container/scripts/install-winetricks
-RUN chown -R container:container /home/container/
-WORKDIR /home/container/scripts
 RUN runuser container bash -c ./install-winetricks
+
 RUN \
-  mkdir -p /home/container/space-engineers/bin &&\
-  mkdir -p /home/container/space-engineers/config
+    mkdir -p /appdata/space-engineers/bin &&\
+    mkdir -p /appdata/space-engineers/config
+
 COPY entrypoint.bash /entrypoint.bash
+COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
 
-RUN chmod +x /entrypoint.bash 
-
-RUN chown -R container:container /home/container
+RUN chmod +x /entrypoint.bash
+RUN chmod +x /entrypoint-space_engineers.bash
 
 USER container
-ENV  USER=container HOME=/home/container
-
 CMD /entrypoint.bash
