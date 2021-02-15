@@ -101,4 +101,5 @@ cat /home/container/space-engineers/SpaceEngineersDedicated/SpaceEngineers-Dedic
 cd /home/container
 
 ##/usr/games/steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
-/entrypoint-space_engineers.bash
+cd /home/container/space-engineers/SpaceEngineersDedicated/DedicatedServer64/
+env WINEARCH=win64 WINEDEBUG=-all WINEPREFIX=/home/container/wineprefix wine /home/container/space-engineers/SpaceEngineersDedicated/DedicatedServer64/SpaceEngineersDedicated.exe -noconsole -path Z:\\home\\container\\space-engineers\\SpaceEngineersDedicated -ignorelastsession
