@@ -2,6 +2,8 @@ FROM ubuntu:focal
 WORKDIR /home/container
 RUN mkdir /home/container/scripts
 
+RUN  useradd -m -u 1000 container 
+
 
 RUN \
   dpkg --add-architecture i386 &&\
@@ -22,7 +24,6 @@ RUN \
   chmod +x /home/container/scripts/winetricks
   ##adduser wine --disabled-password --gecos ""
 
-RUN  useradd -m -u 1000 container 
 
 COPY install-winetricks /home/container/scripts
 RUN \
@@ -37,5 +38,10 @@ RUN \
 COPY entrypoint.bash /entrypoint.bash
 COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
 RUN chmod +x /entrypoint.bash && chmod +x /entrypoint-space_engineers.bash
+
+RUN chown -R container:container /home/container
+
+USER container
+ENV  USER=container HOME=/home/container
 
 CMD /entrypoint.bash
