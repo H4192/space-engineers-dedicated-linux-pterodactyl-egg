@@ -14,6 +14,10 @@ COPY entrypoint.bash /entrypoint.bash
 COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
 RUN chmod +x /entrypoint.bash && chmod +x /entrypoint-space_engineers.bash
 
+
+RUN  useradd -m -u 1001 container &&\
+    chown -R container:container /wineprefix
+
 CMD /entrypoint.bash
 
   
