@@ -1,5 +1,5 @@
 FROM ubuntu:focal
-WORKDIR /root
+WORKDIR /home/container
 RUN mkdir /scripts
 
 
