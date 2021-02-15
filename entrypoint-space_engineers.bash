@@ -1,4 +1,6 @@
 #!/bin/bash
+source ~/.profile
+source ~/.bash_profile
 echo "Start of entrypoint-space_engineers.bash"
 cd /home/container/space-engineers/SpaceEngineersDedicated/DedicatedServer64/
 echo "Starting server"
