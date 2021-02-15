@@ -37,8 +37,7 @@ RUN \
   mkdir -p /home/container/space-engineers/bin &&\
   mkdir -p /home/container/space-engineers/config
 COPY entrypoint.bash /entrypoint.bash
-COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
-RUN chmod +x /entrypoint.bash && chmod +x /entrypoint-space_engineers.bash
+RUN chmod +x /entrypoint.bash 
 
 RUN chown -R container:container /home/container
 
