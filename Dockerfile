@@ -24,6 +24,7 @@ RUN \
   chmod +x /home/container/scripts/winetricks
   ##adduser wine --disabled-password --gecos ""
 
+RUN apt-get install curl -y
 
 COPY install-winetricks /home/container/scripts
 RUN \
