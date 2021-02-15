@@ -88,5 +88,5 @@ cd /home/container
 USER=container 
 HOME=/home/container
 
-/usr/games/steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /appdata/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
+/usr/games/steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
 /entrypoint-space_engineers.bash
