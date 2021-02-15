@@ -31,12 +31,14 @@ RUN \
   mkdir /home/container/wineprefix &&\
   chown -R container:container /home/container/wineprefix &&\
   chmod +x /home/container/scripts/install-winetricks
+RUN chown -R container:container /home/container/
 WORKDIR /home/container/scripts
 RUN runuser container bash -c ./install-winetricks
 RUN \
   mkdir -p /home/container/space-engineers/bin &&\
   mkdir -p /home/container/space-engineers/config
 COPY entrypoint.bash /entrypoint.bash
+
 RUN chmod +x /entrypoint.bash 
 
 RUN chown -R container:container /home/container
