@@ -53,4 +53,5 @@ RUN chmod +x /entrypoint.bash
 RUN chmod +x /entrypoint-space_engineers.bash
 
 USER container
+ENV  USER=container HOME=/home/container
 CMD /entrypoint.bash
