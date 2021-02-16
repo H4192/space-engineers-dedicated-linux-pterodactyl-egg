@@ -35,7 +35,6 @@ RUN adduser container --disabled-password --gecos ""
 
 RUN \
     mkdir /wineprefix &&\
-    chown -R container:container /wineprefix &&\
     chmod +x /scripts/install-winetricks
 
 WORKDIR /scripts
@@ -44,7 +43,9 @@ RUN runuser container bash -c ./install-winetricks
 
 RUN \
     mkdir -p /appdata/space-engineers/bin &&\
-    mkdir -p /appdata/space-engineers/config
+    mkdir -p /appdata/space-engineers/config &&\
+    chown -R container:container /wineprefix &&\
+    chown -R container:container /appdata
 
 COPY entrypoint.bash /entrypoint.bash
 COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
