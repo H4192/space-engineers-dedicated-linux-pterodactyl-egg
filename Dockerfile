@@ -47,6 +47,9 @@ RUN \
     chown -R container:container /wineprefix &&\
     chown -R container:container /appdata
 
+RUN ls -la /appdata &&\
+    ls -la /wineprefix
+
 COPY entrypoint.bash /entrypoint.bash
 COPY entrypoint-space_engineers.bash /entrypoint-space_engineers.bash
 
@@ -55,4 +58,5 @@ RUN chmod +x /entrypoint-space_engineers.bash
 
 USER container
 ENV  USER=container HOME=/home/container
+
 CMD /entrypoint.bash
