@@ -33,8 +33,8 @@ COPY install-winetricks /scripts/
 
 RUN adduser container --disabled-password --gecos "" 
 
-RUN \
-    mkdir /wineprefix &&\
+RUN mkdir /wineprefix &&\
+    chown -R container:container /wineprefix &&\
     chmod +x /scripts/install-winetricks
 
 WORKDIR /scripts
