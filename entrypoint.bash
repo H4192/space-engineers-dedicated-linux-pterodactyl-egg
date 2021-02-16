@@ -49,14 +49,16 @@ if [ $mounted = true ] && [ $files_missing = true ]; then
     mkdir -p ${server_directory}/config/Plugins
 
     /usr/bin/unzip -n /ronly/star-system.zip -d ${server_directory}/config
-    mv ${server_directory}/config/SpaceEngineers-Dedicated.cfg ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
+    cp ${server_directory}/config/SpaceEngineers-Dedicated.cfg ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 fi
 
 
 
 
 #set <LoadWorld> to the correct value
-cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E "/.*LoadWorld.*/c\  <LoadWorld>Z:${server_dir_win}\\config\\World</LoadWorld>" > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
+cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg |\
+  sed -E '/.*LoadWorld.*/c\  <LoadWorld>Z:\\home\\container\\space-engineers\\config\\World</LoadWorld>' > /tmp/SpaceEngineers-Dedicated.cfg && \
+  cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 #set game port to the correct value
 #cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E '/.*ServerPort.*/c\  <ServerPort>27016</ServerPort>' > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
@@ -77,18 +79,27 @@ SED_EXPRESSION_EMPTY="s/<Plugins \/>/${PLUGINS_STRING////\\/} /g"
 SED_EXPRESSION_FULL="s/<Plugins>.*<\/Plugins>/${PLUGINS_STRING////\\/} /g"
 
 #find and replace in SpaceEngineers-Dedicated.cfg for empty "<Plugins />" element
-cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E "$SED_EXPRESSION_EMPTY" > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
+cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | \
+  sed -E "$SED_EXPRESSION_EMPTY" > /tmp/SpaceEngineers-Dedicated.cfg && \
+  cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 #find and replace in SpaceEngineers-Dedicated.cfg for filled out "<Plugins>...</Plugins>" element
 # sed can't handle multiple lines easily, so everything needs to be on a single line.
-cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | sed -E "$SED_EXPRESSION_FULL" > /tmp/SpaceEngineers-Dedicated.cfg && cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
+cat ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg | \
+ sed -E "$SED_EXPRESSION_FULL" > /tmp/SpaceEngineers-Dedicated.cfg &&\
+ cat /tmp/SpaceEngineers-Dedicated.cfg > ${server_directory}/SpaceEngineersDedicated/SpaceEngineers-Dedicated.cfg
 
 cd /home/container
 
 USER=container 
 HOME=/home/container
 
-/usr/games/steamcmd +login anonymous +@sSteamCmdForcePlatformType windows +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated +app_update 298740 +quit
+/usr/games/steamcmd \
+  +login anonymous \
+  +@sSteamCmdForcePlatformType windows \
+  +force_install_dir /home/container/space-engineers/SpaceEngineersDedicated \
+  +app_update 298740 \
+  +quit
 
 echo "End of entrypoint"
 /entrypoint-space_engineers.bash
