@@ -31,7 +31,7 @@ RUN mkdir /scripts &&\
 
 COPY install-winetricks /scripts/
 
-RUN adduser container --uid 1000 --disabled-password --gecos "" 
+RUN adduser container --uid 998 --disabled-password --gecos "" 
 
 RUN mkdir /wineprefix &&\
     chown -R container:container /wineprefix &&\
